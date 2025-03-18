@@ -1,7 +1,7 @@
 .{
     .name = .playground,
     .version = "0.0.0",
-    .fingerprint = 0x81a8b3926a14accb,
+    .fingerprint = 0xdc188848d3e73370,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{
         .raylib_zig = .{
