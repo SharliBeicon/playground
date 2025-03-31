@@ -1,2 +1,2 @@
-.zig-cache
-zig-out
+src.bin
+src.bin.dSYM
