@@ -74,7 +74,7 @@ characterkind_to_string :: proc(kind: CharacterKind) -> string {
 }
 
 characterkind_state_frames :: proc(kind: CharacterKind) -> [dynamic]u8 {
-    state_frames, ok := make([dynamic]u8, 0, 9);ensure(ok == nil)
+    state_frames := make([dynamic]u8, 0, 9)
     #partial switch kind {     // TODO: Priest and Wizard
     case CharacterKind.Archer:
         append_elems(&state_frames, 6, 8, 9, 12, 4, 4)
@@ -271,7 +271,7 @@ character_create :: proc(kind: CharacterKind, texture: ^rl.Texture2D) -> ^Charac
         f32(texture^.width) / f32(max_frames_by_kind),
         f32(texture^.height) / f32(size_of(TwoAttacksState)),
     }
-    character, ok := new(Character);ensure(ok == nil)
+    character := new(Character)
 
     character^ = Character{kind, texture, 100, frame, state, state_frames, 0.0}
     return character

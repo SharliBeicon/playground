@@ -18,10 +18,10 @@ init :: proc() {
     rl.InitWindow(1280, 720, "Playground")
 
     gallery = assets.texture_gallery_create()
-    character_list = make([dynamic]^assets.Character)
-    for kind in assets.CharacterKind {
-        append(&character_list, assets.character_create(kind, &gallery.characters[kind]))
-    }
+    // character_list = make([dynamic]^assets.Character)
+    // for kind in assets.CharacterKind {
+    //     append(&character_list, assets.character_create(kind, &gallery.characters[kind]))
+    // }
 
     camera.zoom = 1.0
 
@@ -41,11 +41,11 @@ update :: proc() {
 
     assets.draw_isometric_floor(&gallery.terrains[.CenterGrass], 16, 16, {600, 500})
 
-    position = {0, 0}
-    for character in character_list {
-        rl.DrawTextureRec(character.texture^, character.frame, position, rl.WHITE)
-        position += {100, 100}
-    }
+    // position = {0, 0}
+    // for character in character_list {
+    //     rl.DrawTextureRec(character.texture^, character.frame, position, rl.WHITE)
+    //     position += {100, 100}
+    // }
 
     rl.EndMode2D()
     rl.EndDrawing()

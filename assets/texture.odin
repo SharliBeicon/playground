@@ -27,10 +27,11 @@ texture_gallery_create :: proc() -> TextureGallery {
         str.write_string(&builder, ".png")
         path = str.to_string(builder)
 
-        data, ok := utils.read_entire_file(path);ensure(ok == true)
-        img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
-        characters[kind] = rl.LoadTextureFromImage(img)
-        rl.UnloadImage(img)
+        data, ok := utils.read_entire_file(path);if ok {
+            img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
+            characters[kind] = rl.LoadTextureFromImage(img)
+            rl.UnloadImage(img)
+        }
 
         str.builder_reset(&builder)
     }
@@ -38,10 +39,11 @@ texture_gallery_create :: proc() -> TextureGallery {
     for kind in TerrainKind {
         #partial switch kind {
         case .CenterGrass:
-            data, ok := utils.read_entire_file("img/terrain/tile_022.png");ensure(ok == true)
-            img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
-            resources[kind] = rl.LoadTextureFromImage(img)
-            rl.UnloadImage(img)
+            data, ok := utils.read_entire_file("img/terrain/tile_022.png");if ok {
+                img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
+                resources[kind] = rl.LoadTextureFromImage(img)
+                rl.UnloadImage(img)
+            }
         }
     }
 

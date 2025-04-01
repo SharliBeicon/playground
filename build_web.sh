@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-EMSCRIPTEN_SDK_DIR="~/Developer/Personal/emsdk"
+EMSCRIPTEN_SDK_DIR="/Users/carlostocinocubelo/Developer/Personal/emsdk"
 OUT_DIR="build/web"
 
 mkdir -p $OUT_DIR
@@ -14,7 +14,7 @@ odin build main_web -target:js_wasm32 -build-mode:obj -define:RAYLIB_WASM_LIB=en
 
 cp $ODIN_PATH/core/sys/wasm/js/odin.js $OUT_DIR/odin.js
 
-emcc -o $OUT_DIR/index.html $OUT_DIR/game.wasm.o $ODIN_PATH/vendor/raylib/wasm/libraylib.a $ODIN_PATH/vendor/raylib/wasm/libraygui.a -sUSE_GLFW=3 -sWASM_BIGINT -sWARN_ON_UNDEFINED_SYMBOLS=0 -sASSERTIONS --shell-file main_web/index_template.html
+emcc -o $OUT_DIR/index.html $OUT_DIR/game.wasm.o $ODIN_PATH/vendor/raylib/wasm/libraylib.a $ODIN_PATH/vendor/raylib/wasm/libraygui.a -sUSE_GLFW=3 -sWASM_BIGINT -sWARN_ON_UNDEFINED_SYMBOLS=0 -sASSERTIONS --shell-file main_web/index_template.html --preload-file img
 
 rm $OUT_DIR/game.wasm.o
 
