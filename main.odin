@@ -41,14 +41,13 @@ init :: proc() {
 
 update :: proc() {
     events.handle_events(&camera, character_list[:], &selected_character)
-    events.handle_mouse_events(&camera, character_list[:], &selected_character)
-    events.handle_keyboard_events(&selected_character)
 
     for &character in character_list {
         assets.character_update_frame(character)
     }
 
     rl.BeginDrawing()
+
     rl.ClearBackground({140, 190, 214, 255})
     rl.BeginMode2D(camera)
 
@@ -85,6 +84,8 @@ update :: proc() {
 
     rl.EndMode2D()
     rl.EndDrawing()
+
+    free_all(context.temp_allocator)
 }
 
 parent_window_size_changed :: proc(w, h: int) {
@@ -92,6 +93,11 @@ parent_window_size_changed :: proc(w, h: int) {
 }
 
 shutdown :: proc() {
+    rl.UnloadFont(font)
+    for character in character_list {
+        free(character)
+    }
+    delete(character_list)
     rl.CloseWindow()
 }
 
@@ -99,8 +105,6 @@ should_run :: proc() -> bool {
     when ODIN_OS != .JS {
         // Never run this proc in browser. It contains a 16 ms sleep on web!
         if rl.WindowShouldClose() {
-            rl.UnloadFont(font)
-            assets.texture_gallery_destroy(&gallery)
             run = false
         }
     }

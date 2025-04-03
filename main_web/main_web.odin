@@ -19,7 +19,7 @@ main_start :: proc "c" () {
     // emscripten. There is some kind of conflict with how the manage memory.
     // So this sets up an allocator that uses emscripten's malloc.
     context.allocator = emscripten_allocator()
-    runtime.init_global_temporary_allocator(1 * mem.Megabyte)
+    runtime.init_global_temporary_allocator(2 * mem.Megabyte)
 
     // Since we now use js_wasm32 we should be able to remove this and use
     // context.logger = log.create_console_logger(). However, that one produces

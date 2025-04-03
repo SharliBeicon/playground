@@ -6,8 +6,8 @@ import str "core:strings"
 import rl "vendor:raylib"
 
 
-CharacterTextureGallery :: map[CharacterKind]rl.Texture2D
-TerrainTextureGallery :: map[TerrainKind]rl.Texture2D
+CharacterTextureGallery :: [CharacterKind]rl.Texture2D
+TerrainTextureGallery :: [TerrainKind]rl.Texture2D
 
 TextureGallery :: struct {
     characters: CharacterTextureGallery,
@@ -15,8 +15,8 @@ TextureGallery :: struct {
 }
 
 texture_gallery_create :: proc() -> TextureGallery {
-    characters := make(CharacterTextureGallery)
-    resources := make(TerrainTextureGallery)
+    characters: CharacterTextureGallery
+    resources: TerrainTextureGallery
 
     builder: str.Builder
     path: string
@@ -27,7 +27,7 @@ texture_gallery_create :: proc() -> TextureGallery {
         str.write_string(&builder, ".png")
         path = str.to_string(builder)
 
-        data, ok := utils.read_entire_file(path);if ok {
+        data, ok := utils.read_entire_file(path, context.temp_allocator);if ok {
             img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
             characters[kind] = rl.LoadTextureFromImage(img)
             rl.UnloadImage(img)
@@ -39,7 +39,10 @@ texture_gallery_create :: proc() -> TextureGallery {
     for kind in TerrainKind {
         switch kind {
         case .Grass:
-            data, ok := utils.read_entire_file("img/terrain/tile_022.png");if ok {
+            data, ok := utils.read_entire_file(
+                "img/terrain/tile_022.png",
+                context.temp_allocator,
+            );if ok {
                 img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
                 resources[kind] = rl.LoadTextureFromImage(img)
                 rl.UnloadImage(img)
@@ -50,14 +53,4 @@ texture_gallery_create :: proc() -> TextureGallery {
     str.builder_destroy(&builder)
 
     return {characters, resources}
-}
-
-texture_gallery_destroy :: proc(gallery: ^TextureGallery) {
-    for _, text in gallery.characters {
-        rl.UnloadTexture(text)
-    }
-
-    for _, text in gallery.terrains {
-        rl.UnloadTexture(text)
-    }
 }

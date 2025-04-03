@@ -11,7 +11,6 @@ Terrain :: struct {
     texture: ^rl.Texture2D,
 }
 
-
 draw_isometric_floor :: proc(
     tile: ^rl.Texture2D,
     grid_width: int,
