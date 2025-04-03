@@ -1,6 +1,7 @@
 package assets
 
 import "../globals"
+import "../utils"
 import rl "vendor:raylib"
 
 CharacterKind :: enum {
@@ -29,43 +30,43 @@ CharacterKind :: enum {
 characterkind_to_string :: proc(kind: CharacterKind) -> string {
     switch kind {
     case CharacterKind.Archer:
-        return "Archer"
+        return "archer"
     case CharacterKind.ArmoredAxeman:
-        return "Armored Axeman"
+        return "armored_axeman"
     case CharacterKind.ArmoredOrc:
-        return "Armored Orc"
+        return "armored_orc"
     case CharacterKind.ArmoredSkeleton:
-        return "Armored Skeleton"
+        return "armored_skeleton"
     case CharacterKind.EliteOrc:
-        return "Elite Orc"
+        return "elite_orc"
     case CharacterKind.GreatswordSkeleton:
-        return "Greatsword Skeleton"
+        return "greatsword_skeleton"
     case CharacterKind.Knight:
-        return "Knight"
+        return "knight"
     case CharacterKind.KnightTemplar:
-        return "Knight Templar"
+        return "knight_templar"
     case CharacterKind.Lancer:
-        return "Lancer"
+        return "lancer"
     case CharacterKind.Orc:
-        return "Orc"
+        return "orc"
     case CharacterKind.OrcRider:
-        return "Orc Rider"
+        return "orc_rider"
     // case CharacterKind.Priest:
     //     return "Priest"
     case CharacterKind.Skeleton:
-        return "Skeleton"
+        return "skeleton"
     case CharacterKind.SkeletonArcher:
-        return "Skeleton Archer"
+        return "skeleton_archer"
     case CharacterKind.Slime:
-        return "Slime"
+        return "slime"
     case CharacterKind.Soldier:
-        return "Soldier"
+        return "soldier"
     case CharacterKind.Swordsman:
-        return "Swordsman"
+        return "swordsman"
     case CharacterKind.Werebear:
-        return "Werebear"
+        return "werebear"
     case CharacterKind.Werewolf:
-        return "Werewolf"
+        return "werewolf"
     // case CharacterKind.Wizard:
     //     return "Wizard"
     case:
@@ -231,13 +232,19 @@ Character :: struct {
     kind:         CharacterKind,
     texture:      ^rl.Texture2D,
     health:       u16,
+    facing_right: bool,
     frame:        rl.Rectangle,
     state:        State,
     state_frames: [dynamic]u8,
     frame_timer:  f32,
+    grid_pos:     rl.Vector2,
 }
 
-character_create :: proc(kind: CharacterKind, texture: ^rl.Texture2D) -> ^Character {
+character_create :: proc(
+    kind: CharacterKind,
+    texture: ^rl.Texture2D,
+    grid_pos: rl.Vector2,
+) -> ^Character {
     state_frames := characterkind_state_frames(kind)
 
     max_frames_by_kind: u8
@@ -271,10 +278,23 @@ character_create :: proc(kind: CharacterKind, texture: ^rl.Texture2D) -> ^Charac
         f32(texture^.width) / f32(max_frames_by_kind),
         f32(texture^.height) / f32(size_of(TwoAttacksState)),
     }
+
     character := new(Character)
 
-    character^ = Character{kind, texture, 100, frame, state, state_frames, 0.0}
+    character^ = Character{kind, texture, 100, true, frame, state, state_frames, 0.0, grid_pos}
+
     return character
+}
+
+character_draw :: proc(character: ^Character) {
+    screen_pos := utils.grid_to_screen(character.grid_pos)
+
+    character.frame.width = abs(character.frame.width)
+    if !character.facing_right {
+        character.frame.width = -abs(character.frame.width)
+    }
+
+    rl.DrawTextureRec(character.texture^, character.frame, screen_pos - {50, 50}, rl.WHITE)
 }
 
 character_update_frame :: proc(character: ^Character) {

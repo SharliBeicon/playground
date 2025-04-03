@@ -3,13 +3,7 @@ package assets
 import rl "vendor:raylib"
 
 TerrainKind :: enum {
-    CenterGrass,
-    TopGrass,
-    BottomGrass,
-    TopLeftGrass,
-    TopRightGrass,
-    BottomLeftGrass,
-    BottomRightGrass,
+    Grass,
 }
 
 Terrain :: struct {

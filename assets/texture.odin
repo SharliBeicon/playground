@@ -37,8 +37,8 @@ texture_gallery_create :: proc() -> TextureGallery {
     }
 
     for kind in TerrainKind {
-        #partial switch kind {
-        case .CenterGrass:
+        switch kind {
+        case .Grass:
             data, ok := utils.read_entire_file("img/terrain/tile_022.png");if ok {
                 img := rl.LoadImageFromMemory(".png", raw_data(data), c.int(len(data)))
                 resources[kind] = rl.LoadTextureFromImage(img)
