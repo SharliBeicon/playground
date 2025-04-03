@@ -2,6 +2,7 @@ package assets
 
 import "../globals"
 import "../utils"
+import "core:fmt"
 import rl "vendor:raylib"
 
 CharacterKind :: enum {
@@ -255,28 +256,37 @@ character_create :: proc(
     }
 
     state: State
+    state_size: int
     #partial switch kind {     // TODO: Wizard and Priest
     case .SkeletonArcher:
         state = OneAttacksState.Idle
+        state_size = len(OneAttacksState)
     case .Archer, .ArmoredSkeleton, .Orc, .Slime, .Werewolf:
         state = TwoAttacksState.Idle
+        state_size = len(TwoAttacksState)
     case .Skeleton:
         state = TwoAttacksWithBlockState.Idle
+        state_size = len(TwoAttacksWithBlockState)
     case .ArmoredAxeman, .EliteOrc, .GreatswordSkeleton, .Soldier, .Swordsman, .Werebear:
         state = ThreeAttacksState.Idle
+        state_size = len(ThreeAttacksState)
     case .ArmoredOrc, .Knight, .OrcRider:
         state = ThreeAttacksWithBlockState.Idle
+        state_size = len(ThreeAttacksWithBlockState)
     case .KnightTemplar:
         state = ThreeAttacksWithBlockAndRunState.Idle
+        state_size = len(ThreeAttacksWithBlockAndRunState)
     case .Lancer:
         state = ThreeAttacksWithRunState.Idle
+        state_size = len(ThreeAttacksWithRunState)
     }
 
+    fmt.printfln("STATE SIZE: %d", state_size)
     frame := rl.Rectangle {
         0.0,
         0.0,
-        f32(texture^.width) / f32(max_frames_by_kind),
-        f32(texture^.height) / f32(size_of(TwoAttacksState)),
+        f32(texture.width) / f32(max_frames_by_kind),
+        f32(texture.height) / f32(state_size),
     }
 
     character := new(Character)
